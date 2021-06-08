@@ -8,6 +8,6 @@
 
 ## Resümee vom 2.06.2021 bis 8.06.2021:
 * Es wurde das 2. Arbeitspaket (Fragments) erledigt.
-* Wir hatten sehr viele Probleme bei den Einbinden der Fragments, deswegen brauchten wir so lange für die Aufgabe.
+* Wir hatten sehr viele Probleme bei den Einbinden der Fragments, deswegen brauchten wir so lange für die Aufgabe. Bei der Drehung in den Querformat zeigt es an, dass die Liste null ist.
 * Wir hinken bis jetzte etwas hinterher, aber wir denken, dass wir es schaffen können.
 * Nächste Woche wollen wir die entsprechende Wetter-API einbauen, sowie die dazugehörigen Menüs für unteranderem die Notifications.
