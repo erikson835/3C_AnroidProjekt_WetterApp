@@ -6,31 +6,48 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 
-public class LeftFragment extends Fragment {
+public class LeftFragment extends Fragment implements View.OnClickListener {
     private ListView lv;
     static ArrayList<Adresse> adresslist = new ArrayList<>();
     private ArrayAdapter<Adresse> adapter;
     private OnSelectionChangedListener listener;
+    private String adresse;
+    private Button button;
+    private static net.htlgrieskirchen.AndroidProjekt_WetterApp_3C.LeftFragment instance;
+    MainActivity ma = MainActivity.getInstance();
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.leftfragment, container, false);
         initializeViews(view);
+        button = view.findViewById(R.id.left_button);
+        button.setOnClickListener(this);
+        //adresslist = new ArrayList<>();
+        adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, adresslist);
+        lv.setAdapter(adapter);
         return view;
     }
 
     private void initializeViews(View view) {
         lv = view.findViewById(R.id.left_listView);
-        adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, adresslist);
-        lv.setAdapter(adapter);
         lv.setOnItemClickListener((parent, view1, position, id) -> itemSelected(position));
+    }
+
+    @Override
+    public void onClick(View v) {
+        showAlertDialog(v);
     }
 
     public interface OnSelectionChangedListener {
@@ -40,6 +57,7 @@ public class LeftFragment extends Fragment {
     @Override
     public void onAttach(Context context){
         super.onAttach(context);
+        instance = this;
         if(context instanceof OnSelectionChangedListener){
             listener = (OnSelectionChangedListener) context;
         }
@@ -54,4 +72,50 @@ public class LeftFragment extends Fragment {
     public void onStart() {
         super.onStart();
     }
+
+    private void showAlertDialog(View v){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(v.getContext());
+        alertDialog.setTitle("Standorteingabe");
+        alertDialog.setMessage("Geben sie ihren gewünschten Standort ein:");
+
+        final EditText input = new EditText(v.getContext());
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        alertDialog.setView(input);
+
+        alertDialog.setPositiveButton("OK", (dialog, which)->addToList(v, input.getText().toString()));
+        alertDialog.setNegativeButton("CANCEL", null);
+        alertDialog.show();
+    }
+
+    private void addToList(View v, String adress){
+        net.htlgrieskirchen.AndroidProjekt_WetterApp_3C.LeftFragment.adresslist.add(new Adresse(adress));
+        adapter.notifyDataSetChanged();
+    }
+
+    public static net.htlgrieskirchen.AndroidProjekt_WetterApp_3C.LeftFragment getInstance(){
+        return instance;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        if (adresslist != null) {
+            savedInstanceState.putSerializable("items", adresslist);
+        }
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onViewStateRestored(@NonNull Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (savedInstanceState != null) {
+            adresslist = (ArrayList<Adresse>) savedInstanceState.getSerializable("adresslist");
+            if (adresslist != null) {
+                ma.setData(adresslist);
+            }
+        }
+    }
+
 }
