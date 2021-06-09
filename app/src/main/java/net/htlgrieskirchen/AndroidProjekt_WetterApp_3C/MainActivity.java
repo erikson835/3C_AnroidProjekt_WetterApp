@@ -42,9 +42,6 @@ public class MainActivity extends AppCompatActivity implements LeftFragment.OnSe
         startActivity(intent);
     }
 
-    public static net.htlgrieskirchen.AndroidProjekt_WetterApp_3C.MainActivity getInstance() {
-        return instance;
-    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
@@ -72,10 +69,6 @@ public class MainActivity extends AppCompatActivity implements LeftFragment.OnSe
                 }
             }
         }
-    }
-
-    public void setData(ArrayList<Adresse> adresslist) {
-        this.adresslist = adresslist;
     }
 
     @Override

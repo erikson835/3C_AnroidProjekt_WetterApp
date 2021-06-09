@@ -22,10 +22,9 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
     static ArrayList<Adresse> adresslist = new ArrayList<>();
     private ArrayAdapter<Adresse> adapter;
     private OnSelectionChangedListener listener;
-    private String adresse;
     private Button button;
     private static net.htlgrieskirchen.AndroidProjekt_WetterApp_3C.LeftFragment instance;
-    MainActivity ma = MainActivity.getInstance();
+    LeftFragment lf = LeftFragment.getInstance();
 
 
     @Override
@@ -91,7 +90,7 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
     }
 
     private void addToList(View v, String adress){
-        net.htlgrieskirchen.AndroidProjekt_WetterApp_3C.LeftFragment.adresslist.add(new Adresse(adress));
+        adresslist.add(new Adresse(adress));
         adapter.notifyDataSetChanged();
     }
 
@@ -102,9 +101,13 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
         if (adresslist != null) {
-            savedInstanceState.putSerializable("items", adresslist);
+            savedInstanceState.putSerializable("adresslist", adresslist);
         }
         super.onSaveInstanceState(savedInstanceState);
+    }
+
+    public void setData(ArrayList<Adresse> adresslist) {
+        this.adresslist = adresslist;
     }
 
     @Override
@@ -113,7 +116,7 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
         if (savedInstanceState != null) {
             adresslist = (ArrayList<Adresse>) savedInstanceState.getSerializable("adresslist");
             if (adresslist != null) {
-                ma.setData(adresslist);
+                lf.setData(adresslist);
             }
         }
     }
