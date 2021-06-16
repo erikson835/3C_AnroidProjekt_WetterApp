@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayoutRightActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RightActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".RightActivity">
+
     <fragment
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:id="@+id/fragRight"
-        android:name="net.htlgrieskirchen.AndroidProjekt_WetterApp_3C.RightFragment" />
+        android:name="net.htlgrieskirchen.AndroidProjekt_WetterApp_3C.RightFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

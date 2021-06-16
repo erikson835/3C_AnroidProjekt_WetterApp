@@ -3,10 +3,12 @@ package net.htlgrieskirchen.AndroidProjekt_WetterApp_3C;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.widget.LinearLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class RightActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

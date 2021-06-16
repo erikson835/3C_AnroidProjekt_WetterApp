@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:key="showNotifications"
+        android:title="Nachrichten anzeigen"
+        android:defaultValue="true" />
+    <ListPreference
+        android:layout_width="match_parent"
+        android:defaultValue="true"
+        android:entries="@array/colors"
+        android:entryValues="@array/color__values"
+        android:iconSpaceReserved="false"
+        android:key="selectedColorCode"
+        android:icon="@null"
+        android:title="Hintergrundfarbe auswaehlen" />
+</PreferenceScreen>
