@@ -2,6 +2,7 @@ package net.htlgrieskirchen.AndroidProjekt_WetterApp_3C;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -30,7 +31,6 @@ public class MainActivity extends AppCompatActivity implements LeftFragment.OnSe
     private boolean showRight = false;
     private static net.htlgrieskirchen.AndroidProjekt_WetterApp_3C.MainActivity instance;
     private ArrayList<Adresse> adresslist;
-    private LinearLayout linearLayout;
     private static final int RQ_PREFERENCES = 1;
     private SharedPreferences prefs;
     private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
@@ -127,7 +127,10 @@ public class MainActivity extends AppCompatActivity implements LeftFragment.OnSe
                 String sValue = sharedPrefs.getString(key, "");
                 int color = Color.parseColor(sValue);
                 LeftFragment.linearLayout.setBackgroundColor(color);
-                RightFragment.linearLayout.setBackgroundColor(color);
+                int orientation = getResources().getConfiguration().orientation;
+                if (orientation != Configuration.ORIENTATION_PORTRAIT){
+                    RightFragment.linearLayout.setBackgroundColor(color);
+                }
                 break;
         }
     }
