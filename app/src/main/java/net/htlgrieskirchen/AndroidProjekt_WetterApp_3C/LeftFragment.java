@@ -27,6 +27,7 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
     private static net.htlgrieskirchen.AndroidProjekt_WetterApp_3C.LeftFragment instance;
     static LinearLayout linearLayout;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.leftfragment, container, false);
@@ -116,12 +117,11 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
         super.onViewStateRestored(savedInstanceState);
         if (savedInstanceState != null) {
             adresslist = (ArrayList<Adresse>) savedInstanceState.getSerializable("adresslist");
+            linearLayout.setBackgroundColor(MainActivity.color);
             if (adresslist != null) {
                 setData(adresslist);
             }
         }
     }
-
-
 
 }

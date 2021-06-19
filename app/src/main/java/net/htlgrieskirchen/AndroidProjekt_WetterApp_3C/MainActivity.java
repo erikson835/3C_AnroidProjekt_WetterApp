@@ -23,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements LeftFragment.OnSe
     private static final int RQ_PREFERENCES = 1;
     private SharedPreferences prefs;
     private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
+    static int color;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +47,9 @@ public class MainActivity extends AppCompatActivity implements LeftFragment.OnSe
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         preferenceChangeListener = (sharedPrefs, key) -> preferenceChanged(sharedPrefs, key);
         prefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
-
-        //linearLayout = findViewById(R.id.background);
     }
 
-    private void initializeView() {
+    private void initializeView(){
         rightFragment = (RightFragment) getSupportFragmentManager().findFragmentById(R.id.fragRight);
         showRight = rightFragment != null && rightFragment.isInLayout();
     }
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements LeftFragment.OnSe
         switch (key) {
             case "selectedColorCode":
                 String sValue = sharedPrefs.getString(key, "");
-                int color = Color.parseColor(sValue);
+                color = Color.parseColor(sValue);
                 LeftFragment.linearLayout.setBackgroundColor(color);
                 int orientation = getResources().getConfiguration().orientation;
                 if (orientation != Configuration.ORIENTATION_PORTRAIT){

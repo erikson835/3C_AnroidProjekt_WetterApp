@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rightLayout"
     android:layout_width="match_parent"
@@ -7,9 +8,103 @@
     android:orientation="vertical"
     tools:context=".RightFragment">
 
-    <TextView
-        android:id="@+id/right_cityname"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Stadtnamen" />
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Wetterdaten"
+                android:textSize="30dp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/right_weather_icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:src="@tools:sample/avatars" />
+
+            <TextView
+                android:id="@+id/right_cityname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Stadtnamen"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/right_mainweather"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="main"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/right_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="description"
+                android:textSize="15dp" />
+
+            <TextView
+                android:id="@+id/right_temp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="temp" />
+
+            <TextView
+                android:id="@+id/right_feelslike"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="feelslike" />
+
+            <TextView
+                android:id="@+id/right_temp_min_max"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="temp_min_max" />
+
+            <TextView
+                android:id="@+id/right_sunrise"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="sunrise" />
+
+            <TextView
+                android:id="@+id/right_sunset"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="sunset" />
+
+            <TextView
+                android:id="@+id/right_wind"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="windSpeed" />
+
+            <TextView
+                android:id="@+id/right_druck"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="druck" />
+
+            <TextView
+                android:id="@+id/right_luftfeuchtigkeit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="luftfeuchtigkeit" />
+
+        </LinearLayout>
+    </ScrollView>
+
 </LinearLayout>
