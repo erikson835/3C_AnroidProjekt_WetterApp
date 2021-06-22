@@ -1,41 +1,48 @@
 package net.htlgrieskirchen.AndroidProjekt_WetterApp_3C;
 
+import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.preference.PreferenceManager;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements LeftFragment.OnSelectionChangedListener, View.OnClickListener {
     private RightFragment rightFragment;
     private boolean showRight = false;
-    private static net.htlgrieskirchen.AndroidProjekt_WetterApp_3C.MainActivity instance;
+    private static MainActivity instance;
     private ArrayList<Adresse> adresslist;
     private static final int RQ_PREFERENCES = 1;
     private SharedPreferences prefs;
     private SharedPreferences.OnSharedPreferenceChangeListener preferenceChangeListener;
     static int color;
+
+    static NotificationManagerCompat notificationManagerCompat;
+    public static boolean getNotifications = true;
+    public static final int CHANNEL_ID = 120;
+    private Intent notificationsIntent;
+
+    public static LocationManager lm;
+    public static boolean isGpsGranted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +54,22 @@ public class MainActivity extends AppCompatActivity implements LeftFragment.OnSe
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
         preferenceChangeListener = (sharedPrefs, key) -> preferenceChanged(sharedPrefs, key);
         prefs.registerOnSharedPreferenceChangeListener(preferenceChangeListener);
+
+        notificationsIntent = new Intent(this, Notifications.class);
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel channel = new NotificationChannel(String.valueOf(CHANNEL_ID), "channel", importance);
+
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
+
+        notificationManagerCompat = NotificationManagerCompat.from(this);
+        if(getNotifications){
+            startNotificationService();
+        }
+
+        isGpsGranted = false;
+        lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+        checkPermissionGPS();
     }
 
     private void initializeView(){
@@ -107,9 +130,32 @@ public class MainActivity extends AppCompatActivity implements LeftFragment.OnSe
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {                   //Action-Bar-Reaktion
-        if (item.getItemId() == R.id.menu_einstellungen) {
-            Intent intent = new Intent(this, MySettingsActivity.class);
-            startActivityForResult(intent, RQ_PREFERENCES);
+        switch (item.getItemId()){
+            case R.id.menu_einstellungen:
+                Intent intent = new Intent(this, MySettingsActivity.class);
+                startActivityForResult(intent, RQ_PREFERENCES);
+                break;
+            case R.id.standort:
+                if (isGpsGranted){
+                    double lon = 0.0;
+                    double lat = 0.0;
+                    Location l = null;
+                    try{
+                        l = MainActivity.lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        if(l != null){
+                            lon = l.getLongitude();
+                            lat = l.getLatitude();
+                        }
+                    }catch (SecurityException e){
+                        e.printStackTrace();
+                    }
+                    String pos="geo:"+lat+","+lon+"?z=12";
+                    Uri uri = Uri.parse(pos);
+                    Intent intent2 = new Intent(Intent.ACTION_VIEW);
+                    intent2.setData(uri);
+                    startActivity(intent2);
+                }
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -132,6 +178,56 @@ public class MainActivity extends AppCompatActivity implements LeftFragment.OnSe
                     RightFragment.linearLayout.setBackgroundColor(color);
                 }
                 break;
+            case "sendNotification":
+                boolean b = sharedPrefs.getBoolean(key, true);
+                boolean prevNotificationPreference = getNotifications;
+                getNotifications = b;
+                if(prevNotificationPreference && !getNotifications){
+                    stopNotificationService();
+                }else if(!prevNotificationPreference && getNotifications){
+                    startNotificationService();
+                }
+                break;
         }
+    }
+
+    public void startNotificationService() {
+        startService(notificationsIntent);
+    }
+
+    public void stopNotificationService() {
+        stopService(notificationsIntent);
+    }
+
+    private void checkPermissionGPS() {
+        String permission = Manifest.permission.ACCESS_FINE_LOCATION;
+        if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{permission}, 321);
+        } else {
+            gpsGranted();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode != 321) return;
+        if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+            new AlertDialog.Builder(this)
+                    .setTitle("GPS verweigert")
+                    .setNeutralButton("Ok", null)
+                    .show();
+        } else {
+            gpsGranted();
+        }
+    }
+
+    private void gpsGranted() {
+        isGpsGranted = true;
+        LocationListener ll = new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+            }
+        };
     }
 }

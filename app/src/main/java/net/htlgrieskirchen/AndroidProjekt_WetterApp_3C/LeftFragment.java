@@ -1,7 +1,6 @@
 package net.htlgrieskirchen.AndroidProjekt_WetterApp_3C;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +23,7 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
     private ArrayAdapter<Adresse> adapter;
     private OnSelectionChangedListener listener;
     private Button button;
-    private static net.htlgrieskirchen.AndroidProjekt_WetterApp_3C.LeftFragment instance;
+    private static LeftFragment instance;
     static LinearLayout linearLayout;
 
 
@@ -96,7 +95,7 @@ public class LeftFragment extends Fragment implements View.OnClickListener {
         adapter.notifyDataSetChanged();
     }
 
-    public static net.htlgrieskirchen.AndroidProjekt_WetterApp_3C.LeftFragment getInstance(){
+    public static LeftFragment getInstance(){
         return instance;
     }
 

@@ -1,9 +1,6 @@
 package net.htlgrieskirchen.AndroidProjekt_WetterApp_3C;
 
-import android.provider.Telephony;
-
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class Adresse implements Serializable {
     String adresse;
