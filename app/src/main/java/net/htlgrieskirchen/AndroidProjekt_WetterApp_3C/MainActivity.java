@@ -57,9 +57,6 @@ public class MainActivity extends AppCompatActivity implements LeftFragment.OnSe
     public static final int CHANNEL_ID = 120;
     private Intent notificationsIntent;
 
-    public static LocationManager lm;
-    public static boolean isGpsGranted;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements LeftFragment.OnSe
         notificationManager.createNotificationChannel(channel);
 
         notificationManagerCompat = NotificationManagerCompat.from(this);
-        if(getNotifications){
+        if (getNotifications) {
             startNotificationService();
         }
 
@@ -151,170 +148,105 @@ public class MainActivity extends AppCompatActivity implements LeftFragment.OnSe
     @SuppressLint("MissingPermission")
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {                   //Action-Bar-Reaktion
-        switch (item.getItemId()){
-            case R.id.menu_einstellungen:
-                Intent intent = new Intent(this, MySettingsActivity.class);
-                startActivityForResult(intent, RQ_PREFERENCES);
-                break;
-            case R.id.standort:
-                if (isGpsGranted){
-                    double lon = 0.0;
-                    double lat = 0.0;
-                    Location l = null;
-                    try{
-                        l = MainActivity.lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                        if(l != null){
-                            lon = l.getLongitude();
-                            lat = l.getLatitude();
-                        }
-                    }catch (SecurityException e){
-                        e.printStackTrace();
-                    }
-                    String pos="geo:"+lat+","+lon+"?z=12";
-                    Uri uri = Uri.parse(pos);
-                    Intent intent2 = new Intent(Intent.ACTION_VIEW);
-                    intent2.setData(uri);
-                    startActivity(intent2);
-                }
-                break;
         switch (item.getItemId()) {
             case R.id.menu_einstellungen:
                 Intent intent = new Intent(this, MySettingsActivity.class);
                 startActivityForResult(intent, RQ_PREFERENCES);
                 break;
             case R.id.standort:
-                if (isGpsGranted){
+                if (isGpsGranted) {
                     double lon = 0.0;
                     double lat = 0.0;
                     Location l = null;
-                    try{
+                    try {
                         l = MainActivity.lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                        if(l != null){
+                        if (l != null) {
                             lon = l.getLongitude();
                             lat = l.getLatitude();
                         }
-                    }catch (SecurityException e){
+                    } catch (SecurityException e) {
                         e.printStackTrace();
                     }
-                    String pos="geo:"+lat+","+lon+"?z=12";
+                    String pos = "geo:" + lat + "," + lon + "?z=12";
                     Uri uri = Uri.parse(pos);
                     Intent intent2 = new Intent(Intent.ACTION_VIEW);
                     intent2.setData(uri);
                     startActivity(intent2);
                 }
                 break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void checkPermissionGPS() {
-        String permission = Manifest.permission.ACCESS_FINE_LOCATION;
-        if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{permission}, 321);
-        } else {
-            gpsGranted();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode != 321) return;
-        if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-            new AlertDialog.Builder(this)
-                    .setTitle("GPS verweigert")
-                    .setNeutralButton("Ok", null)
-                    .show();
-        } else {
-            gpsGranted();
-        }
-    }
-
-    private void gpsGranted() {
-        isGpsGranted = true;
-        LocationListener ll = new LocationListener() {
-            @Override
-            public void onLocationChanged(@NonNull Location location) {
             }
-        };
-    }
-
-    public void openMap(double longitude, double latitude) {
-        String pos="geo:"+latitude+","+longitude+"?z=18"; //vertauschen der Variable!
-        Uri uri = Uri.parse(pos);
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(uri);
-        startActivity(intent);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {               //Action-Bar-Menü
-        getMenuInflater().inflate(R.menu.action_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    private void preferenceChanged(SharedPreferences sharedPrefs, String key) {
-        // Entsprechende Preference akutalisieren
-        switch (key) {
-            case "selectedColorCode":
-                String sValue = sharedPrefs.getString(key, "");
-                color = Color.parseColor(sValue);
-                LeftFragment.linearLayout.setBackgroundColor(color);
-                int orientation = getResources().getConfiguration().orientation;
-                if (orientation != Configuration.ORIENTATION_PORTRAIT){
-                    RightFragment.linearLayout.setBackgroundColor(color);
-                }
-                break;
-            case "sendNotification":
-                boolean b = sharedPrefs.getBoolean(key, true);
-                boolean prevNotificationPreference = getNotifications;
-                getNotifications = b;
-                if(prevNotificationPreference && !getNotifications){
-                    stopNotificationService();
-                }else if(!prevNotificationPreference && getNotifications){
-                    startNotificationService();
-                }
-                break;
+            return super.onOptionsItemSelected(item);
         }
-    }
 
-    public void startNotificationService() {
-        startService(notificationsIntent);
-    }
-
-    public void stopNotificationService() {
-        stopService(notificationsIntent);
-    }
-
-    private void checkPermissionGPS() {
-        String permission = Manifest.permission.ACCESS_FINE_LOCATION;
-        if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{permission}, 321);
-        } else {
-            gpsGranted();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode != 321) return;
-        if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-            new AlertDialog.Builder(this)
-                    .setTitle("GPS verweigert")
-                    .setNeutralButton("Ok", null)
-                    .show();
-        } else {
-            gpsGranted();
-        }
-    }
-
-    private void gpsGranted() {
-        isGpsGranted = true;
-        LocationListener ll = new LocationListener() {
-            @Override
-            public void onLocationChanged(@NonNull Location location) {
+        private void checkPermissionGPS () {
+            String permission = Manifest.permission.ACCESS_FINE_LOCATION;
+            if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{permission}, 321);
+            } else {
+                gpsGranted();
             }
-        };
+        }
+
+        @Override
+        public void onRequestPermissionsResult ( int requestCode, @NonNull String[] permissions,
+        @NonNull int[] grantResults){
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            if (requestCode != 321) return;
+            if (grantResults.length > 0 && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                new AlertDialog.Builder(this)
+                        .setTitle("GPS verweigert")
+                        .setNeutralButton("Ok", null)
+                        .show();
+            } else {
+                gpsGranted();
+            }
+        }
+
+        private void gpsGranted () {
+            isGpsGranted = true;
+            LocationListener ll = new LocationListener() {
+                @Override
+                public void onLocationChanged(@NonNull Location location) {
+                }
+            };
+        }
+        @Override
+        public boolean onCreateOptionsMenu (Menu menu){               //Action-Bar-Menü
+            getMenuInflater().inflate(R.menu.action_menu, menu);
+            return super.onCreateOptionsMenu(menu);
+        }
+
+        private void preferenceChanged (SharedPreferences sharedPrefs, String key){
+            // Entsprechende Preference akutalisieren
+            switch (key) {
+                case "selectedColorCode":
+                    String sValue = sharedPrefs.getString(key, "");
+                    color = Color.parseColor(sValue);
+                    LeftFragment.linearLayout.setBackgroundColor(color);
+                    int orientation = getResources().getConfiguration().orientation;
+                    if (orientation != Configuration.ORIENTATION_PORTRAIT) {
+                        RightFragment.linearLayout.setBackgroundColor(color);
+                    }
+                    break;
+                case "sendNotification":
+                    boolean b = sharedPrefs.getBoolean(key, true);
+                    boolean prevNotificationPreference = getNotifications;
+                    getNotifications = b;
+                    if (prevNotificationPreference && !getNotifications) {
+                        stopNotificationService();
+                    } else if (!prevNotificationPreference && getNotifications) {
+                        startNotificationService();
+                    }
+                    break;
+            }
+        }
+
+        public void startNotificationService () {
+            startService(notificationsIntent);
+        }
+
+        public void stopNotificationService () {
+            stopService(notificationsIntent);
+        }
+
     }
-}
