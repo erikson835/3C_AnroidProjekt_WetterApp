@@ -17,3 +17,9 @@
 * Wir hatten ein paar Probleme bei den Menüs.
 * Wir hinken bis jetzte etwas hinterher, aber wir denken, dass wir es schaffen können.
 * Nächste Woche wollen wir die entsprechende Wetter-API einbauen und die Notifications.
+
+## Resümee vom 16.06.2021 bis 22.06.2021:
+* Es wurde das 4. Arbeitspaket (Wetterdaten, Standort, Notifications) erledigt.
+* Wir hatten leichte Probleme bei den Notifcations.
+* Wir haben nun das Projekt erfolreich fertig gestellt und sind bereit zur Präsentation.
+* Nächste Woche wollen wir entspannt die letzten Schultage in diesem Schuljahr genießen.
